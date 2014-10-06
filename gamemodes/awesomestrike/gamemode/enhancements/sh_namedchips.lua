@@ -1,0 +1,1 @@
+-- Basically what the named chips actually do is stored here.

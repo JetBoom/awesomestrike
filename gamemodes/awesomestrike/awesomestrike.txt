@@ -1,0 +1,114 @@
+"awesomestrike"
+{
+	"base"				"base"
+	"title"				"Awesome Strike"
+	"maps"				"^cs_|^de_|^as_|^aim_|^fy_|^ctf_|^asctf_"
+	"menusystem"		"1"
+	"workshopid"		"116524163"
+
+	"author_name"		"William 'JetBoom' Moodhe"
+	"author_email"		"williammoodhe@gmail.com"
+	"author_url"		"http://www.noxiousnet.com/"
+
+	"settings"
+	{
+		1
+		{
+			"name"		"as_roundtime"
+			"text"		"Round length"
+			"help"		"How long each round is"
+			"type"		"Numeric"
+			"default"	"240"
+		}
+
+		2
+		{
+			"name"		"as_roundtime_ctf"
+			"text"		"CTF round length"
+			"help"		"How long each round of CTF is"
+			"type"		"Numeric"
+			"default"	"600"
+		}
+
+		3
+		{
+			"name"		"as_numrounds"
+			"text"		"Number of rounds"
+			"help"		"How many rounds"
+			"type"		"Numeric"
+			"default"	"15"
+		}
+
+		4
+		{
+			"name"		"as_numrounds_ctf"
+			"text"		"Number of CTF rounds"
+			"help"		"How many rounds of CTF"
+			"type"		"Numeric"
+			"default"	"6"
+		}
+
+		5
+		{
+			"name"		"as_intermissiontime"
+			"text"		"Idle time after a round"
+			"help"		"Number of waves players must survive to win"
+			"type"		"Numeric"
+			"default"	"7"
+		}
+
+		6
+		{
+			"name"		"as_votetime"
+			"text"		"Voting time"
+			"help"		"Time people get to vote for maps"
+			"type"		"Numeric"
+			"default"	"30"
+		}
+
+		7
+		{
+			"name"		"as_freezetime"
+			"text"		"Pre-round time"
+			"help"		"Time players are frozen so they can buy weapons"
+			"type"		"Numeric"
+			"default"	"6"
+		}
+
+		8
+		{
+			"name"		"as_eventeams"
+			"text"		"Even teams"
+			"help"		"Enforce even teams"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+
+		9
+		{
+			"name"		"as_balanceteams"
+			"text"		"Balanced teams"
+			"help"		"Enforce balanced teams"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+
+		10
+		{
+			"name"		"as_scrambleteams"
+			"text"		"Scramble teams for fairness"
+			"help"		"Scramble teams if one team is losing too much"
+			"type"		"CheckBox"
+			"default"	"1"
+		}
+
+		11
+		{
+			"name"		"as_respawntime"
+			"text"		"Respawn time"
+			"help"		"Respawn time for players"
+			"type"		"Numeric"
+			"default"	"10"
+		}
+	}
+}

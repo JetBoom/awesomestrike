@@ -1,0 +1,5 @@
+"vertexlitgeneric" {
+    "$basetexture" "peanut\conansword"
+    "$surfaceprop" "concrete"
+    "$model"	 "1"
+}

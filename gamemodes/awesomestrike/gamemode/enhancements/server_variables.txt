@@ -1,0 +1,39 @@
+//-- Copy of the current item server variables.
+//-- Rarity is basically how often it appears when rolling for what mutator(s) to use.
+//-- Keep in mind that named chips are only stored on the item server in the form of what ID they are. Those chips can be edited by server owners for better or worse.
+
+//-- How many mutators per chip?
+$ENHANCEMENT_MUTATORS_MAX = 5;
+$ENHANCEMENT_MUTATORS_MIN = 1;
+$ENHANCEMENT_MUTATORS_GOAL = 2;
+
+$ENHANCEMENT_ROLLSCALE_LINEAR = 0;
+$ENHANCEMENT_ROLLSCALE_SQUARE = 1;
+$ENHANCEMENT_ROLLSCALE_CUBE = 2;
+$ENHANCEMENT_ROLLSCALE_DEFAULT = $ENHANCEMENT_ROLLSCALE_SQUARE;
+
+$ENHANCEMENT_ROLLMAX = array();
+$ENHANCEMENT_ROLLMIN = array();
+$ENHANCEMENT_ROLLSCALE = array();
+$ENHANCEMENT_RARITY = array();
+
+//-- If there's no $rollmin then the "value" will be $rollmax.
+function Enhancement_SetUp($id = -1, $rarity, $rollmax = 0, $rollmin, $rollscale = $ENHANCEMENT_ROLLSCALE_DEFAULT)
+{
+	$ENHANCEMENT_ROLLMAX[$id] = $rollmax;
+	$ENHANCEMENT_ROLLMIN[$id] = $rollmin;
+	$ENHANCEMENT_RARITY[$id] = $rarity;
+	$ENHANCEMENT_ROLLSCALE[$id] = $rollscale;
+}
+
+Enhancement_SetUp($ENHANCEMENT_BULLET_DAMAGE, 1 / 10, 20.0, -20.0);
+Enhancement_SetUp($ENHANCEMENT_BULLET_SPEED, 1 / 10, 40.0, -50.0);
+
+//-- These are rare already. There's a 10% chance that every drop will not be a randomly generated chip.
+//-- Uniques drop a lot less.
+
+$NAMEDCHIP_RARITY = array();
+$NAMEDCHIP_RARITY[$NAMEDCHIP_UNIQUE_CROSSFIRE_1] = 1 / 100;
+$NAMEDCHIP_RARITY[$NAMEDCHIP_RARE_CROSSFIRE_1] = 1 / 10;
+$NAMEDCHIP_RARITY[$NAMEDCHIP_RARE_CROSSFIRE_2] = 1 / 10;
+$NAMEDCHIP_RARITY[$NAMEDCHIP_UNIQUE_CROSSFIRE_2] = 1 / 100;

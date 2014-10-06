@@ -1,0 +1,63 @@
+function STATE:Started(pl, oldstate)
+	if SERVER then pl:EmitSound("awesomestrike/sprint.wav", 60, 125) end
+
+	pl:ViewPunch(Angle(3, 0, 0))
+
+	if not pl:OnGround() then
+		local vel = pl:GetVelocity()
+		vel.z = math.min(0, vel.z)
+		pl:SetNextMoveVelocity(vel)
+	end
+
+	pl:CallWeaponFunction("SprintStarted", newstate)
+end
+
+function STATE:Ended(pl, newstate)
+	pl:CallWeaponFunction("SprintEnded", newstate)
+end
+
+function STATE:KeyRelease(pl, key)
+	if key == IN_FORWARD then
+		pl:EndState()
+	end
+end
+
+function STATE:Think(pl)
+	if pl:KeyPressed(IN_JUMP) or pl:WaterLevel() >= 2 or not pl:OnGround() then
+		pl:EndState()
+	elseif pl:Crouching() then
+		pl:SetState(STATE_SLIDE)
+	end
+
+	if CLIENT and not pl:ShouldDrawLocalPlayer() then pl:CreateFootParticles() end
+end
+
+function STATE:Move(pl, move)
+	local speed = pl:GetMaxSpeed() + SPEED_BONUS_SPRINT * math.min(1, (CurTime() - pl:GetStateStart()) * 2)
+	move:SetMaxSpeed(speed)
+	move:SetMaxClientSpeed(speed)
+
+	if not pl:OnGround() then
+		local newvel = pl:GetForward() * speed
+		newvel.z = move:GetVelocity().z
+		move:SetVelocity(newvel)
+	end
+
+	local side = move:GetSideSpeed()
+	if side > 0 then
+		move:SetSideSpeed(speed * 0.75)
+	elseif side < 0 then
+		move:SetSideSpeed(-speed * 0.75)
+	end
+	move:SetForwardSpeed(speed)
+end
+
+function STATE:CalcMainActivity(pl, velocity)
+	return ACT_MP_RUN, -1
+end
+
+if not CLIENT then return end
+
+function STATE:PostPlayerDraw(pl)
+	pl:CreateFootParticles()
+end
