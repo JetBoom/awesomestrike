@@ -2,23 +2,17 @@ include("shared.lua")
 
 function ENT:Initialize()
 	self:SetRenderBounds(Vector(-64, -64, -64), Vector(64, 64, 64))
-
-	self.Emitter = ParticleEmitter(self:GetPos())
-	self.Emitter:SetNearClip(24, 32)
-end
-
-function ENT:Think()
-	self.Emitter:SetPos(self:GetPos())
-end
-
-function ENT:OnRemove()
-	--self.Emitter:Finish()
 end
 
 function ENT:Draw()
 	self:DrawModel()
 
-	local particle = self.Emitter:Add("particles/smokey", self:GetPos())
+	local pos = self:GetPos()
+
+	local emitter = ParticleEmitter(pos)
+	emitter:SetNearClip(24, 32)
+
+	local particle = emitter:Add("particles/smokey", pos)
 	particle:SetVelocity(VectorRand():GetNormalized() * math.Rand(1, 4))
 	particle:SetDieTime(1.5)
 	particle:SetStartAlpha(160)
@@ -29,4 +23,6 @@ function ENT:Draw()
 	particle:SetRoll(math.Rand(0, 360))
 	particle:SetColor(255, 255, 0)
 	particle:SetLighting(true)
+
+	emitter:Finish()
 end

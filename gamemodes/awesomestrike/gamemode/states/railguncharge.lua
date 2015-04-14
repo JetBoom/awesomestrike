@@ -78,7 +78,9 @@ function STATE:DrawEffectAtPos(pl, pos)
 	render.DrawSprite(pos, spritesize, spritesize, col)
 
 	local r, g, b = col.r, col.g, col.b
-	local emitter = pl:ParticleEmitter()
+	local emitter = ParticleEmitter(pos)
+	emitter:SetNearClip(24, 32)
+
 	local curvel = pl:GetVelocity()
 	for i=1, 4 do
 		eyeangles:RotateAroundAxis(eyeangles:Forward(), 90)
@@ -96,6 +98,8 @@ function STATE:DrawEffectAtPos(pl, pos)
 		particle:SetRollDelta(math.Rand(-8, 8))
 		particle:SetColor(r, g, b)
 	end
+
+	emitter:Finish()
 
 	local dlight = DynamicLight(pl:EntIndex() + 2048)
 	if dlight then

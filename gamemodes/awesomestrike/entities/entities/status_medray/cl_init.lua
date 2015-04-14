@@ -11,9 +11,6 @@ function ENT:Initialize()
 	self.AmbientSound = CreateSound(self, "weapons/physcannon/superphys_hold_loop.wav")
 
 	self.Rotation = math.Rand(0, 360)
-
-	self.Emitter = ParticleEmitter(self:GetPos())
-	self.Emitter:SetNearClip(20, 32)
 end
 
 function ENT:Think()
@@ -23,13 +20,11 @@ function ENT:Think()
 	if owner:IsValid() then
 		local hitpos = owner:TraceHull(1024, MASK_SHOT, 2).HitPos
 		self:SetRenderBoundsWS(owner:GetShootPos(), hitpos, Vector(64, 64, 64))
-		self.Emitter:SetPos(hitpos)
 	end
 end
 
 function ENT:OnRemove()
 	self.AmbientSound:Stop()
-	--self.Emitter:Finish()
 	self:GetOwner().MedRay = nil
 end
 
@@ -88,8 +83,10 @@ function ENT:DrawTranslucent()
 	render.SetMaterial(matGlow)
 	render.DrawSprite(hitpos, math.sin(CurTime() * 10) * 32 + 48, math.cos(CurTime() * 10) * 32 + 48, col)
 
-	self.Emitter:SetPos(hitpos)
-	local particle = self.Emitter:Add("sprites/glow04_noz", hitpos)
+	local emitter = ParticleEmitter(hitpos)
+	emitter:SetNearClip(20, 32)
+
+	local particle = emitter:Add("sprites/glow04_noz", hitpos)
 	particle:SetVelocity(tr.Normal * -128 + VectorRand():GetNormalized() * 32)
 	particle:SetDieTime(0.5)
 	particle:SetStartSize(20)
@@ -100,4 +97,6 @@ function ENT:DrawTranslucent()
 	particle:SetColor(30, 255, 30)
 	particle:SetRoll(math.Rand(0, 360))
 	particle:SetRollDelta(math.Rand(-10, 10))
+
+	emitter:Finish()
 end

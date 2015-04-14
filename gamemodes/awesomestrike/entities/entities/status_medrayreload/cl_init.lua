@@ -8,24 +8,15 @@ function ENT:Initialize()
 
 	self.AmbientSound = CreateSound(self, "items/suitcharge1.wav")
 
-	self.Emitter = ParticleEmitter(self:GetPos())
-	self.Emitter:SetNearClip(20, 32)
-
 	self.DieTime = CurTime() + 3
 end
 
 function ENT:Think()
 	self.AmbientSound:PlayEx(0.75, math.min(255, 255 - (self.DieTime - CurTime()) * 80))
-
-	local owner = self:GetOwner()
-	if owner:IsValid() then
-		self.Emitter:SetPos(owner:EyePos())
-	end
 end
 
 function ENT:OnRemove()
 	self.AmbientSound:Stop()
-	--self.Emitter:Finish()
 	self:GetOwner().MedRayReload = nil
 end
 
@@ -67,8 +58,10 @@ function ENT:DrawTranslucent()
 
 	local up = eyeangles:Up()
 
-	self.Emitter:SetPos(startpos)
-	local particle = self.Emitter:Add("sprites/glow04_noz", startpos + up * 100)
+	local emitter = ParticleEmitter(startpos)
+	emitter:SetNearClip(20, 32)
+
+	local particle = emitter:Add("sprites/glow04_noz", startpos + up * 100)
 	particle.BaseVelocity = up * -200
 	particle.Owner = owner
 	particle:SetVelocity(owner:GetVelocity() + particle.BaseVelocity)
@@ -81,4 +74,6 @@ function ENT:DrawTranslucent()
 	particle:SetEndAlpha(0)
 	particle:SetThinkFunction(partthink)
 	particle:SetNextThink(CurTime() + 0.025)
+
+	emitter:Finish()
 end

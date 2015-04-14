@@ -6,6 +6,8 @@ local Sounds = {
 
 EFFECT.LifeTime = 1
 
+EFFECT.NextEmit = 0
+
 function EFFECT:Init(data)
 	self.Ent = data:GetEntity()
 	self.Pos = data:GetOrigin()
@@ -17,21 +19,11 @@ function EFFECT:Init(data)
 		sound.Play(snd, self.Pos, 70, 100)
 	end
 
-	local emitter = ParticleEmitter(self.Pos)
-	emitter:SetNearClip(24, 32)
-	self.Emitter = emitter
-
 	self.DieTime = CurTime() + self.LifeTime
-	self.NextEmit = 0
 end
 
 function EFFECT:Think()
-	if CurTime() >= self.DieTime then
-		--self.Emitter:Finish()
-		return false
-	end
-
-	return true
+	return CurTime() < self.DieTime
 end
 
 function EFFECT:GetDelta()
@@ -44,11 +36,16 @@ function EFFECT:Render()
 
 	local delta = self:GetDelta()
 
-	local particle = self.Emitter:Add("effects/yellowflare", self.Pos)
+	local emitter = ParticleEmitter(self.Pos)
+	emitter:SetNearClip(24, 32)
+
+	local particle = emitter:Add("effects/yellowflare", self.Pos)
 	particle:SetDieTime(delta ^ 2 + 0.5)
 	particle:SetStartAlpha(200 + delta * 50)
 	particle:SetEndAlpha(0)
 	particle:SetStartSize(1)
 	particle:SetEndSize(delta * 256)
 	particle:SetRollDelta(delta * 360)
+
+	emitter:Finish()
 end

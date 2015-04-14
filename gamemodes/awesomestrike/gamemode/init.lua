@@ -1165,7 +1165,7 @@ concommand.Add("initpostentity", function(sender, command, arguments)
 end)
 
 function GM:PlayerSelectSpawn(pl)
-	local tab = team.GetSpawnPoint(pl:Team())
+	local tab = team.GetSpawnPoint(pl:Team()) or {}
 	local Count = #tab
 	if Count == 0 then return pl end
 	local ChosenSpawnPoint = tab[1]

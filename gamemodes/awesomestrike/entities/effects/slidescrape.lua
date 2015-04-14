@@ -1,15 +1,12 @@
 function EFFECT:Init(data)
 	self.Owner = data:GetEntity()
 	self.AmbientSound = CreateSound(self.Owner:IsValid() and self.Owner or self.Entity, "physics/body/body_medium_scrape_smooth_loop1.wav")
-	self.Emitter = ParticleEmitter(data:GetOrigin())
-	self.Emitter:SetNearClip(24, 32)
 end
 
 function EFFECT:Think()
 	local owner = self.Owner
 	if owner:IsValid() and owner:GetState() == STATE_SLIDE then
 		self.Entity:SetPos(owner:GetPos())
-		self.Emitter:SetPos(owner:GetPos())
 
 		if owner:OnGround() then
 			local speedpower = math.Clamp(owner:GetVelocity():Length() / 600, 0.4, 1)
@@ -31,16 +28,15 @@ function EFFECT:Render()
 	local owner = self.Owner
 	if owner:IsValid() and owner:GetState() == STATE_SLIDE and owner:OnGround() then
 		local pos = owner:GetPos()
-		local emitter = self.Emitter
-		emitter:SetPos(pos)
-
 		local vel = owner:GetVelocity()
 		local speed = vel:Length()
 		local dir = vel:GetNormalized()
 		local right = dir:Angle():Right()
 		local velspeed = speed * 0.1
-
 		local start = pos + dir * 20 + Vector(0, 0, 4)
+
+		local emitter = ParticleEmitter(start)
+		emitter:SetNearClip(24, 32)
 
 		for i=1, 8 do
 			local particle = emitter:Add("particle/smokestack", start)
@@ -58,5 +54,7 @@ function EFFECT:Render()
 			particle:SetAirResistance(20)
 			particle:SetGravity(vecgrav)
 		end
+
+		emitter:Finish()
 	end
 end

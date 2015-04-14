@@ -75,7 +75,8 @@ local function CreateParticles(emitter, pos)
 	particle:SetRollDelta(math.Rand(-10, 10))
 end
 function STATE:PostPlayerDraw(pl)
-	local emitter = pl:ParticleEmitter()
+	local emitter = ParticleEmitter(pl:GetPos())
+	emitter:SetNearClip(24, 32)
 
 	local boneindex = pl:LookupBone("valvebiped.bip01_l_foot")
 	if boneindex then
@@ -100,6 +101,6 @@ function STATE:PostPlayerDraw(pl)
 			CreateParticles(emitter, weaponstatus:LocalToWorld(Vector(math.Rand(mins.x, maxs.x), math.Rand(mins.y, maxs.y), math.Rand(mins.z, maxs.z))))
 		end
 	end
+
+	emitter:Finish()
 end
-
-

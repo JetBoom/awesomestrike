@@ -14,20 +14,22 @@ function EFFECT:Init(data)
 		phys:Wake()
 		phys:ApplyForceCenter(dir * math.random(speed * 0.25, speed))
 	end
-	self.Living = CurTime() + 4
-	self.Emitter = ParticleEmitter(self.Entity:GetPos())
-	self.Emitter:SetNearClip(32, 48)
+	self.Living = CurTime() + 4	
 end
 
 function EFFECT:Think()
-	self.Emitter:SetPos(self.Entity:GetPos())
 	local tr = util.TraceLine({start = self.Entity:GetPos(), endpos = self.Entity:GetPos() + self.Entity:GetVelocity():GetNormalized() * 16, mask = MASK_NPCWORLDSTATIC})
 	if tr.Hit then
 		self.Living = -5
 	end
 
 	if self.Living < CurTime() then
-		local particle = self.Emitter:Add("effects/fire_cloud1", self.Entity:GetPos())
+		local pos = self.Entity:GetPos()
+
+		local emitter = ParticleEmitter(pos)
+		emitter:SetNearClip(32, 48)
+
+		local particle = emitter:Add("effects/fire_cloud1", pos)
 		particle:SetDieTime(0.75)
 		particle:SetStartAlpha(255)
 		particle:SetEndAlpha(20)
@@ -36,7 +38,9 @@ function EFFECT:Think()
 		particle:SetRoll(math.Rand(0, 360))
 		particle:SetRollDelta(math.Rand(-5, 5))
 		particle:SetColor(255, 255, 255)
-		--self.Emitter:Finish()
+
+		emitter:Finish()
+
 		return false
 	end
 
@@ -44,7 +48,12 @@ function EFFECT:Think()
 end
 
 function EFFECT:Render()
-	local particle = self.Emitter:Add("effects/fire_cloud1", self.Entity:GetPos() + VectorRand() * 4)
+	local pos = self.Entity:GetPos()
+
+	local emitter = ParticleEmitter(pos)
+	emitter:SetNearClip(32, 48)
+
+	local particle = emitter:Add("effects/fire_cloud1", pos + VectorRand() * 4)
 	particle:SetDieTime(0.3)
 	particle:SetStartAlpha(255)
 	particle:SetEndAlpha(200)
@@ -53,4 +62,6 @@ function EFFECT:Render()
 	particle:SetRoll(math.Rand(0, 360))
 	particle:SetRollDelta(math.Rand(-1, 1))
 	particle:SetColor(255, 220, 100)
+
+	emitter:Finish()
 end

@@ -6,17 +6,6 @@ function ENT:Initialize()
 	self:SetModelScale(1.5, 0)
 	self:DrawShadow(false)
 	self:SetRenderBounds(Vector(-128, -128, -128), Vector(128, 128, 128))
-
-	self.Emitter = ParticleEmitter(self:GetPos())
-	self.Emitter:SetNearClip(16, 24)
-end
-
-function ENT:Think()
-	self.Emitter:SetPos(self:GetPos())
-end
-
-function ENT:OnRemove()
-	--self.Emitter:Finish()
 end
 
 function ENT:SetupAngles(vel)
@@ -39,14 +28,21 @@ function ENT:DoColors()
 end
 
 function ENT:EmitParticles()
-	local particle = self.Emitter:Add("sprites/glow04_noz", self:GetPos() + VectorRand():GetNormalized() * math.Rand(-2, 2))
+	local pos = self:GetPos()
+	local col = self:GetColor()
+
+	local emitter = ParticleEmitter(pos)
+	emitter:SetNearClip(16, 24)
+
+	local particle = emitter:Add("sprites/glow04_noz", pos + VectorRand():GetNormalized() * math.Rand(-2, 2))
 	particle:SetDieTime(0.5)
 	particle:SetStartAlpha(255)
 	particle:SetEndAlpha(255)
 	particle:SetStartSize(1)
 	particle:SetRoll(math.Rand(0, 360))
-	local r, g, b, a = self:GetColor()
-	particle:SetColor(r, g, b)
+	particle:SetColor(col.r, col.g, col.b)
+
+	emitter:Finish()
 end
 
 function ENT:DrawGlow()

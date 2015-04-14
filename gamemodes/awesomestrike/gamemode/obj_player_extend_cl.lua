@@ -75,15 +75,15 @@ local function CollideCallbackSmall(particle, hitpos, hitnormal)
 end
 local ShadowParams = {secondstoarrive = 0.0001, maxangular = 0, maxangulardamp = 0, maxspeed = 32000, maxspeeddamp = 1024, dampfactor = 0.5, angle = Angle(0, 0, 0), teleportdistance = 32}
 function meta:Think()
-	local emitter = self:ParticleEmitter()
-	emitter:SetPos(self:GetPos())
-
 	if self:Alive() and CurTime() >= (self.NextBloodDrip or 0) then
 		local health = self:Health()
 		if health <= 25 then
 			self.NextBloodDrip = CurTime() + health / 12.5 + math.Rand(1, 2)
 			local pos = self:LocalToWorld(self:OBBCenter())
-			for i=1, math.random(1, 3) do
+			local emitter = ParticleEmitter(pos)
+			emitter:SetNearClip(24, 32)
+
+			for i=1, math.random(3) do
 				local particle = emitter:Add("noxctf/sprite_bloodspray"..math.random(1, 8), pos + VectorRand():GetNormalized() * math.Rand(1, 8))
 				particle:SetLighting(true)
 				particle:SetVelocity(self:GetVelocity() * math.Rand(0.6, 0.8) + VectorRand():GetNormalized() * math.Rand(2, 8))
@@ -101,6 +101,8 @@ function meta:Think()
 				particle:SetCollide(true)
 				particle:SetCollideCallback(CollideCallbackSmall)
 			end
+
+			emitter:Finish()
 		end
 	end
 
@@ -136,7 +138,9 @@ end
 local FootParticles = {[TEAM_CT] = "effects/strider_muzzle", [TEAM_T] = "effects/fire_cloud1"}
 function meta:CreateFootParticle(pos)
 	local particletype = FootParticles[self:Team()] or FootParticles[TEAM_T]
-	local emitter = self:ParticleEmitter()
+	local emitter = ParticleEmitter(pos)
+	emitter:SetNearClip(24, 32)
+
 	for i=1, 3 do
 		local particle = emitter:Add(particletype, pos + VectorRand():GetNormalized() * math.Rand(1, 5))
 		particle:SetDieTime(math.Rand(0.7, 0.9))
@@ -148,6 +152,8 @@ function meta:CreateFootParticle(pos)
 		particle:SetRoll(math.Rand(0, 360))
 		particle:SetRollDelta(math.Rand(-5, 5))
 	end
+
+	emitter:Finish()
 end
 function meta:CreateFootParticles()
 	local boneindex = self:LookupBone("valvebiped.bip01_l_foot")
@@ -171,15 +177,6 @@ function meta:AddNotice(message, lifetime, colid)
 	if self == MySelf then
 		GAMEMODE:AddNotice(message, lifetime, colid)
 	end
-end
-
-function meta:ParticleEmitter()
-	if not self.m_ParticleEmitter then
-		self.m_ParticleEmitter = ParticleEmitter(self:GetPos())
-		self.m_ParticleEmitter:SetNearClip(24, 32)
-	end
-
-	return self.m_ParticleEmitter
 end
 
 function meta:GetStatus(sType)
