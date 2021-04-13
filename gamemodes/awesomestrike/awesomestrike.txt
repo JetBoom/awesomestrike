@@ -3,6 +3,7 @@
 	"base"				"base"
 	"title"				"Awesome Strike"
 	"maps"				"^cs_|^de_|^as_|^aim_|^fy_|^ctf_|^asctf_"
+	"category"			"pvp"
 	"menusystem"		"1"
 	"workshopid"		"116524163"
 
